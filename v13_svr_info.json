@@ -1,0 +1,10 @@
+[
+  {
+    "name": "SanTrope RP #1",
+    "addr": "80.66.71.45:5125",
+    "gamemode": " X2",
+    "players": 0,
+    "maxplayers": 1000,
+    "api": "http://80.66.71.45/"
+  }
+]
