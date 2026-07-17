@@ -1,1 +1,10 @@
-[{"name":"SanTrope RP #67 [VOICE]","addr":"80.66.71.45:5125","gamemode":"NEW X2","players":0,"maxplayers":1000,"api":"http:\/\/80.66.71.45\/"}]
+[
+    {
+        "name": "SanTrope RP #67 [VOICE]",
+        "addr": "80.66.71.45:5125",
+        "gamemode": "NEW X2",
+        "players": 0,
+        "maxplayers": 1000,
+        "api": "http:\/\/80.66.71.45\/"
+    }
+]
