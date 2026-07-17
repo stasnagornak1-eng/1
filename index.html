@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>v13_svr_info.json — viewer</title>
+  <style>
+    :root{--bg:#0f1113;--panel:#121314;--text:#e6eef8;--muted:#9aa6b2;--accent:#9bdcff}
+    html,body{height:100%;margin:0;font-family:Inter,ui-monospace,SFMono-Regular,Menlo,Monaco,monospace;background:var(--bg);color:var(--text)}
+    .toolbar{display:flex;align-items:center;gap:12px;padding:10px 14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-bottom:1px solid rgba(255,255,255,0.03)}
+    label{user-select:none;font-size:14px;color:var(--muted)}
+    input[type=checkbox]{width:16px;height:16px;vertical-align:middle}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 8px;border-radius:6px;cursor:pointer}
+    .viewer{padding:18px;}
+    pre{margin:0;white-space:pre-wrap;word-break:break-word;line-height:1.45;font-size:13px;color:var(--text);background:transparent}
+    .notice{padding:12px;color:var(--muted);font-size:13px}
+    @media (min-width:800px){pre{white-space:pre;}}
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <label><input id="auto" type="checkbox" checked> Автоформатировать</label>
+    <button id="download">Скачать JSON</button>
+    <div style="flex:1"></div>
+    <div class="notice">Файл: v13_svr_info.json</div>
+  </div>
+  <div class="viewer"><pre id="output">Загрузка...</pre></div>
+
+  <script>
+    // Простая страница для просмотра и автоформатирования JSON
+    (function(){
+      const out = document.getElementById('output');
+      const auto = document.getElementById('auto');
+      const dl = document.getElementById('download');
+      let rawText = '';
+      let parsed = null;
+
+      async function load(){
+        try{
+          const res = await fetch('v13_svr_info.json');
+          if(!res.ok) throw new Error('HTTP ' + res.status);
+          rawText = await res.text();
+          try{ parsed = JSON.parse(rawText); } catch(e){ parsed = null; }
+          render();
+        }catch(err){ out.textContent = 'Ошибка загрузки: ' + err; }
+      }
+
+      function render(){
+        if(parsed && auto.checked){
+          out.textContent = JSON.stringify(parsed, null, 4);
+        } else if(parsed && !auto.checked) {
+          out.textContent = JSON.stringify(parsed);
+        } else {
+          out.textContent = rawText || '';
+        }
+      }
+
+      auto.addEventListener('change', render);
+
+      dl.addEventListener('click', ()=>{
+        const blob = new Blob([rawText], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'v13_svr_info.json'; document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      // Try to load on open
+      load();
+
+      // Expose for debugging in console
+      window.__v13 = { render, load };
+    })();
+  </script>
+</body>
+</html>
